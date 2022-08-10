@@ -1,2 +1,2 @@
-# protos
-API def
+# collection with some protos and contracts
+

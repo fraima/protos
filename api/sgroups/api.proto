@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package hbf.v1.sgroups;
+option go_package = "github.com/H-BF/protos/pkg/api/sgroups;sgroups";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "common/ip-transport.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Security groups API";
+    version: "1.0";
+    contact: {
+      name: "E";
+      url: "https://blog.bullgare.com/2020/07/complete-list-of-swagger-options-to-protobuf-file/";
+    };
+  };
+  schemes: [HTTP];
+  consumes: "application/json";
+  produces: "application/json";
+};
+
+//ip network
+message Network {
+  string name = 1;
+  common.Networks.NetIP network = 2;
+}
+
+//security group
+message SecGroup {
+  string name = 1;
+  repeated Network networks = 2;
+}
+
+//security group rule
+message Rule {
+  //security group at client
+  SecGroup sg_from = 1;
+  //security group at server
+  SecGroup sg_to = 2;
+  //IP net transport
+  common.Networks.NetIP.Transport transport = 3;
+  //port range(s)
+  repeated common.Networks.NetIP.PortRange port_range = 4;
+}
+
+message SyncReq {
+  repeated Rule rules = 1;
+}
+
+message GetSgSubnetsReq {
+  string sg_name = 1;
+}
+
+message GetSgSubnetsResp {
+  repeated Network networks = 1;
+}
+
+message GetRulesReq {
+  string sg_from = 1;
+  string sg_to = 2;
+}
+
+message FindRulesReq {
+  repeated string sg_from = 1;
+  repeated string sg_to = 2;
+}
+
+message RulesResp {
+  repeated Rule rules = 1;
+}
+
+message GetSecGroupForAddressReq{
+  //an IP or IP/subnet address
+  string address = 1;
+}
+
+//security groups and its rules service
+service SecGroupService {
+   //synchronize security rules
+   rpc Sync(SyncReq) returns (google.protobuf.Empty) {
+     option (google.api.http) = {
+       post: "/v1/sync"
+       body: "*"
+     };
+   };
+
+   //get subnet(s) for SG
+   rpc GetSgSubnets(GetSgSubnetsReq) returns (GetSgSubnetsResp){
+     option (google.api.http) = {
+       get: "/v1/sg/{sg_name}/subnets"
+     };
+   };
+
+   //find security rules for direction SG --> SG
+   rpc GetRules(GetRulesReq) returns (RulesResp) {
+     option (google.api.http) = {
+       get: "/v1/sg-from/{sg_from}/to/{sg_to}/rules"
+     };
+   };
+
+   //find security rules scoped by security groups
+   rpc FindRules(FindRulesReq) returns (RulesResp) {
+     option (google.api.http) = {
+       post: "/v1/rules"
+       body: "*"
+     };
+   };
+
+   //get security group for address
+   rpc GetSecGroupForAddress(GetSecGroupForAddressReq) returns (SecGroup) {
+     option (google.api.http) = {
+       get: "/v1/{address}/sg"
+     };
+   };
+}

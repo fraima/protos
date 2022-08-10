@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package common;
+option go_package = "github.com/H-BF/protos/pkg/api/common;common";
+
+import "google/protobuf/descriptor.proto";
+
+//Networks
+message Networks {
+  //IP network
+  message NetIP {
+    //IP net transport
+    enum Transport {
+      TCP = 0;
+      UDP = 1;
+    }
+    //IP net port range
+    message PortRange {
+      uint32 from = 1;
+      uint32 to = 2;
+    }
+    //IP net address range
+    string CIDR = 1;
+  }
+}
+
