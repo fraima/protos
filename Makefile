@@ -62,7 +62,8 @@ ifeq ($(wildcard $(GOBIN)/protoc-gen-go-grpc),)
 endif
 	@echo 0 > /dev/null
 
-proto_dirs := ipvs ipruler route tunnel announcer healthcheck sgroups common
+#proto_dirs := ipvs ipruler route tunnel announcer healthcheck sgroups common
+proto_dirs := sgroups common
 .PHONY: generate-api
 generate-api:
 	@(\
