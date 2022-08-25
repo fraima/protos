@@ -37,7 +37,7 @@ linters:
   disable-all: true
   enable:
     - revive
-    #- unparam
+    - unparam
     - govet
     - errcheck
     - deadcode
@@ -75,3 +75,4 @@ issues:
     # errcheck: Almost all programs ignore errors on these functions and in most cases it's ok
     - Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*printf?|os\.(Un)?Setenv|.*Rollback). is not checked
     - should check returned error before deferring
+    - should have a package comment
