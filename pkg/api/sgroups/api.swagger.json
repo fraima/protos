@@ -224,6 +224,16 @@
       },
       "title": "IP network"
     },
+    "SyncReqSyncOp": {
+      "type": "string",
+      "enum": [
+        "FullSync",
+        "Upsert",
+        "Delete"
+      ],
+      "default": "FullSync",
+      "title": "- FullSync: full synchronize operation\n - Upsert: just Insert/Update passed items\n - Delete: just Delete passed items"
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -306,12 +316,19 @@
           "$ref": "#/definitions/NetIPTransport",
           "title": "IP net transport"
         },
-        "portRange": {
+        "portsFrom": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/NetIPPortRange"
           },
-          "title": "port range(s)"
+          "title": "port range(s) from"
+        },
+        "portsTo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NetIPPortRange"
+          },
+          "title": "port range(s) to"
         }
       },
       "title": "security group rule"
@@ -342,7 +359,37 @@
       },
       "title": "security group"
     },
+    "sgroupsSyncNetworks": {
+      "type": "object",
+      "properties": {
+        "networks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sgroupsNetwork"
+          }
+        }
+      },
+      "title": "Synchronize networks"
+    },
     "sgroupsSyncReq": {
+      "type": "object",
+      "properties": {
+        "syncOp": {
+          "$ref": "#/definitions/SyncReqSyncOp"
+        },
+        "sgRules": {
+          "$ref": "#/definitions/sgroupsSyncSGRules"
+        },
+        "groups": {
+          "$ref": "#/definitions/sgroupsSyncSecurityGroups"
+        },
+        "networks": {
+          "$ref": "#/definitions/sgroupsSyncNetworks"
+        }
+      },
+      "title": "Synchronize data"
+    },
+    "sgroupsSyncSGRules": {
       "type": "object",
       "properties": {
         "rules": {
@@ -351,7 +398,20 @@
             "$ref": "#/definitions/sgroupsRule"
           }
         }
-      }
+      },
+      "title": "Synchronize security group Rules"
+    },
+    "sgroupsSyncSecurityGroups": {
+      "type": "object",
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sgroupsSecGroup"
+          }
+        }
+      },
+      "title": "Synchronize Security Groups"
     }
   }
 }

@@ -43,12 +43,45 @@ message Rule {
   SecGroup sg_to = 2;
   //IP net transport
   common.Networks.NetIP.Transport transport = 3;
-  //port range(s)
-  repeated common.Networks.NetIP.PortRange port_range = 4;
+  //port range(s) from
+  repeated common.Networks.NetIP.PortRange ports_from = 4;
+  //port range(s) to
+  repeated common.Networks.NetIP.PortRange ports_to = 5;
 }
 
-message SyncReq {
+
+
+//Synchronize security group Rules
+message SyncSGRules{
   repeated Rule rules = 1;
+}
+
+//Synchronize Security Groups
+message SyncSecurityGroups{
+  repeated SecGroup groups = 1;
+}
+
+//Synchronize networks
+message SyncNetworks{
+  repeated Network networks = 1;
+}
+
+//Synchronize data
+message SyncReq {
+  enum SyncOp {
+    //full synchronize operation
+    FullSync = 0;
+    //just Insert/Update passed items
+    Upsert = 1;
+    //just Delete passed items
+    Delete = 2;
+  }
+  SyncOp sync_op = 1;
+  oneof subject {
+      SyncSGRules sg_rules = 2;
+      SyncSecurityGroups groups = 3;
+      SyncNetworks networks = 4;
+  }
 }
 
 message GetSgSubnetsReq {

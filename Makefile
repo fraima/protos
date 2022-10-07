@@ -72,7 +72,6 @@ generate-api:
 	PATH=$(PATH):$(GOBIN) && \
 	rm -rf $$dest 2>/dev/null && \
 	mkdir -p $$dest && \
-	make go-deps && \
 	echo generating API in \"$$dest\" ... && \
 	for p in $(proto_dirs); do \
 		for v in $$apis/$$p/*.proto; do \
