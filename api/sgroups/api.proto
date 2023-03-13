@@ -49,7 +49,10 @@ message Rule {
   repeated common.Networks.NetIP.PortRange ports_to = 5;
 }
 
-
+message SyncStatusResp {
+  //db sate changes its value after each successful Sync op
+  string db_state = 1;
+}
 
 //Synchronize security group Rules
 message SyncSGRules{
@@ -64,6 +67,20 @@ message SyncSecurityGroups{
 //Synchronize networks
 message SyncNetworks{
   repeated Network networks = 1;
+}
+
+message ListNetworksReq {}
+
+//ListNetworksResp networks list
+message ListNetworksResp {
+  repeated Network networks = 1;
+}
+
+message ListSecurityGroupsReq{}
+
+//ListSecurityGroupsResp Security Groups lists
+message ListSecurityGroupsResp{
+  repeated SecGroup groups = 1;
 }
 
 //Synchronize data
@@ -119,7 +136,30 @@ service SecGroupService {
        post: "/v1/sync"
        body: "*"
      };
-   };
+   }
+
+   //gets status after sync operation
+   rpc SyncStatus(google.protobuf.Empty) returns(SyncStatusResp){
+     option (google.api.http) = {
+       get: "/v1/sync/status"
+     };
+   }
+
+   //lists networks
+   rpc ListNetworks(ListNetworksReq) returns (ListNetworksResp) {
+     option (google.api.http) = {
+       post: "/v1/list/networks"
+       body: "*"
+     };
+   }
+
+   //lists security groups
+   rpc ListSecurityGroups(ListSecurityGroupsReq) returns (ListSecurityGroupsResp) {
+     option (google.api.http) = {
+       post: "/v1/list/security-groups"
+       body: "*"
+     };
+   }
 
    //get subnet(s) for SG
    rpc GetSgSubnets(GetSgSubnetsReq) returns (GetSgSubnetsResp){

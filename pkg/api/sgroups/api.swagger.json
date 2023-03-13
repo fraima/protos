@@ -23,6 +23,72 @@
     "application/json"
   ],
   "paths": {
+    "/v1/list/networks": {
+      "post": {
+        "summary": "lists networks",
+        "operationId": "SecGroupService_ListNetworks",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sgroupsListNetworksResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sgroupsListNetworksReq"
+            }
+          }
+        ],
+        "tags": [
+          "SecGroupService"
+        ]
+      }
+    },
+    "/v1/list/security-groups": {
+      "post": {
+        "summary": "lists security groups",
+        "operationId": "SecGroupService_ListSecurityGroups",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sgroupsListSecurityGroupsResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/sgroupsListSecurityGroupsReq"
+            }
+          }
+        ],
+        "tags": [
+          "SecGroupService"
+        ]
+      }
+    },
     "/v1/rules": {
       "post": {
         "summary": "find security rules scoped by security groups",
@@ -132,6 +198,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
+              "type": "object",
               "properties": {}
             }
           },
@@ -152,6 +219,29 @@
             }
           }
         ],
+        "tags": [
+          "SecGroupService"
+        ]
+      }
+    },
+    "/v1/sync/status": {
+      "get": {
+        "summary": "gets status after sync operation",
+        "operationId": "SecGroupService_SyncStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/sgroupsSyncStatusResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
         "tags": [
           "SecGroupService"
         ]
@@ -289,6 +379,36 @@
         }
       }
     },
+    "sgroupsListNetworksReq": {
+      "type": "object"
+    },
+    "sgroupsListNetworksResp": {
+      "type": "object",
+      "properties": {
+        "networks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sgroupsNetwork"
+          }
+        }
+      },
+      "title": "ListNetworksResp networks list"
+    },
+    "sgroupsListSecurityGroupsReq": {
+      "type": "object"
+    },
+    "sgroupsListSecurityGroupsResp": {
+      "type": "object",
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sgroupsSecGroup"
+          }
+        }
+      },
+      "title": "ListSecurityGroupsResp Security Groups lists"
+    },
     "sgroupsNetwork": {
       "type": "object",
       "properties": {
@@ -412,6 +532,15 @@
         }
       },
       "title": "Synchronize Security Groups"
+    },
+    "sgroupsSyncStatusResp": {
+      "type": "object",
+      "properties": {
+        "dbState": {
+          "type": "string",
+          "title": "db sate changes its value after each successful Sync op"
+        }
+      }
     }
   }
 }
