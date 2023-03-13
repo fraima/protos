@@ -536,9 +536,10 @@
     "sgroupsSyncStatusResp": {
       "type": "object",
       "properties": {
-        "dbState": {
+        "updatedAt": {
           "type": "string",
-          "title": "db sate changes its value after each successful Sync op"
+          "format": "date-time",
+          "title": "last succeeded update timestamp"
         }
       }
     }
