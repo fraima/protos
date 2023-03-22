@@ -23,21 +23,13 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SecGroupServiceClient interface {
-	//synchronize security rules
 	Sync(ctx context.Context, in *SyncReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	//gets status after sync operation
 	SyncStatus(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SyncStatusResp, error)
-	//lists networks
 	ListNetworks(ctx context.Context, in *ListNetworksReq, opts ...grpc.CallOption) (*ListNetworksResp, error)
-	//lists security groups
 	ListSecurityGroups(ctx context.Context, in *ListSecurityGroupsReq, opts ...grpc.CallOption) (*ListSecurityGroupsResp, error)
-	//get subnet(s) for SG
 	GetSgSubnets(ctx context.Context, in *GetSgSubnetsReq, opts ...grpc.CallOption) (*GetSgSubnetsResp, error)
-	//find security rules for direction SG --> SG
 	GetRules(ctx context.Context, in *GetRulesReq, opts ...grpc.CallOption) (*RulesResp, error)
-	//find security rules scoped by security groups
 	FindRules(ctx context.Context, in *FindRulesReq, opts ...grpc.CallOption) (*RulesResp, error)
-	//get security group for address
 	GetSecGroupForAddress(ctx context.Context, in *GetSecGroupForAddressReq, opts ...grpc.CallOption) (*SecGroup, error)
 }
 
@@ -125,21 +117,13 @@ func (c *secGroupServiceClient) GetSecGroupForAddress(ctx context.Context, in *G
 // All implementations must embed UnimplementedSecGroupServiceServer
 // for forward compatibility
 type SecGroupServiceServer interface {
-	//synchronize security rules
 	Sync(context.Context, *SyncReq) (*emptypb.Empty, error)
-	//gets status after sync operation
 	SyncStatus(context.Context, *emptypb.Empty) (*SyncStatusResp, error)
-	//lists networks
 	ListNetworks(context.Context, *ListNetworksReq) (*ListNetworksResp, error)
-	//lists security groups
 	ListSecurityGroups(context.Context, *ListSecurityGroupsReq) (*ListSecurityGroupsResp, error)
-	//get subnet(s) for SG
 	GetSgSubnets(context.Context, *GetSgSubnetsReq) (*GetSgSubnetsResp, error)
-	//find security rules for direction SG --> SG
 	GetRules(context.Context, *GetRulesReq) (*RulesResp, error)
-	//find security rules scoped by security groups
 	FindRules(context.Context, *FindRulesReq) (*RulesResp, error)
-	//get security group for address
 	GetSecGroupForAddress(context.Context, *GetSecGroupForAddressReq) (*SecGroup, error)
 	mustEmbedUnimplementedSecGroupServiceServer()
 }

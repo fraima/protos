@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Security groups API",
+    "title": "Host Based Firewall",
     "version": "1.0",
     "contact": {
       "name": "E",
@@ -10,7 +10,8 @@
   },
   "tags": [
     {
-      "name": "SecGroupService"
+      "name": "SecGroupService",
+      "description": "Security Groups API service"
     }
   ],
   "schemes": [
@@ -25,7 +26,7 @@
   "paths": {
     "/v1/list/networks": {
       "post": {
-        "summary": "lists networks",
+        "description": "ListNetworks: shows list of Network",
         "operationId": "SecGroupService_ListNetworks",
         "responses": {
           "200": {
@@ -58,7 +59,7 @@
     },
     "/v1/list/security-groups": {
       "post": {
-        "summary": "lists security groups",
+        "description": "ListSecurityGroups: shows list of Security Groups",
         "operationId": "SecGroupService_ListSecurityGroups",
         "responses": {
           "200": {
@@ -91,7 +92,7 @@
     },
     "/v1/rules": {
       "post": {
-        "summary": "find security rules scoped by security groups",
+        "description": "FindRules: finds SG(s) Rule(s) scoped by variety pairs 'from'-\u003e'to'",
         "operationId": "SecGroupService_FindRules",
         "responses": {
           "200": {
@@ -124,7 +125,7 @@
     },
     "/v1/sg-from/{sgFrom}/to/{sgTo}/rules": {
       "get": {
-        "summary": "find security rules for direction SG --\u003e SG",
+        "description": "GetRules: gets SG(s) Rule(s) for pair SG 'from'-\u003e'to'",
         "operationId": "SecGroupService_GetRules",
         "responses": {
           "200": {
@@ -143,12 +144,14 @@
         "parameters": [
           {
             "name": "sgFrom",
+            "description": "name of security groups 'from'",
             "in": "path",
             "required": true,
             "type": "string"
           },
           {
             "name": "sgTo",
+            "description": "name of security groups 'to'",
             "in": "path",
             "required": true,
             "type": "string"
@@ -161,7 +164,7 @@
     },
     "/v1/sg/{sgName}/subnets": {
       "get": {
-        "summary": "get subnet(s) for SG",
+        "description": "GetSgSubnets: gets Networks related to SG",
         "operationId": "SecGroupService_GetSgSubnets",
         "responses": {
           "200": {
@@ -180,6 +183,7 @@
         "parameters": [
           {
             "name": "sgName",
+            "description": "security group name",
             "in": "path",
             "required": true,
             "type": "string"
@@ -192,7 +196,7 @@
     },
     "/v1/sync": {
       "post": {
-        "summary": "synchronize security rules",
+        "description": "Sync: makes changes in DB",
         "operationId": "SecGroupService_Sync",
         "responses": {
           "200": {
@@ -226,7 +230,7 @@
     },
     "/v1/sync/status": {
       "get": {
-        "summary": "gets status after sync operation",
+        "description": "SyncStatus: gets last succeeded update DB status",
         "operationId": "SecGroupService_SyncStatus",
         "responses": {
           "200": {
@@ -249,7 +253,7 @@
     },
     "/v1/{address}/sg": {
       "get": {
-        "summary": "get security group for address",
+        "description": "GetSecGroupForAddress: gets Security Group by IP or CIDR",
         "operationId": "SecGroupService_GetSecGroupForAddress",
         "responses": {
           "200": {
@@ -268,7 +272,7 @@
         "parameters": [
           {
             "name": "address",
-            "description": "an IP or IP/subnet address",
+            "description": "an IP or CIDR",
             "in": "path",
             "required": true,
             "type": "string"
@@ -286,14 +290,16 @@
       "properties": {
         "from": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "title": "port from"
         },
         "to": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "title": "port to"
         }
       },
-      "title": "IP net port range"
+      "title": "PortRange: port [from - to] range"
     },
     "NetIPTransport": {
       "type": "string",
@@ -302,17 +308,17 @@
         "UDP"
       ],
       "default": "TCP",
-      "title": "IP net transport"
+      "title": "Transport: represents net transport (L4)"
     },
     "NetworksNetIP": {
       "type": "object",
       "properties": {
         "CIDR": {
           "type": "string",
-          "title": "IP net address range"
+          "title": "CIDR: IP range"
         }
       },
-      "title": "IP network"
+      "title": "NetIP: represents IP-Network type (L3)"
     },
     "SyncReqSyncOp": {
       "type": "string",
@@ -322,7 +328,8 @@
         "Delete"
       ],
       "default": "FullSync",
-      "title": "- FullSync: full synchronize operation\n - Upsert: just Insert/Update passed items\n - Delete: just Delete passed items"
+      "description": "- FullSync: FullSync: Delete+Insert+Update operations (default)\n - Upsert: Upsert: Insert+Update operations\n - Delete: Delete: Delete operation",
+      "title": "SyncOp: sync operation"
     },
     "protobufAny": {
       "type": "object",
@@ -358,15 +365,18 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "title": "scope GS name 'from' items"
         },
         "sgTo": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "title": "scope  GS name 'to' items"
         }
-      }
+      },
+      "title": "FindRulesReq: req to find all SecGroup(s) Rule(s) scoped by variety('from') --\u003e variety('to') SG(s)"
     },
     "sgroupsGetSgSubnetsResp": {
       "type": "object",
@@ -375,12 +385,15 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/sgroupsNetwork"
-          }
+          },
+          "title": "network items"
         }
-      }
+      },
+      "title": "GetSgSubnetsResp: Networks related to Security Group resp"
     },
     "sgroupsListNetworksReq": {
-      "type": "object"
+      "type": "object",
+      "title": "ListNetworksReq: req to list Networks"
     },
     "sgroupsListNetworksResp": {
       "type": "object",
@@ -389,13 +402,15 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/sgroupsNetwork"
-          }
+          },
+          "title": "network items"
         }
       },
-      "title": "ListNetworksResp networks list"
+      "title": "ListNetworksResp: Network list resp"
     },
     "sgroupsListSecurityGroupsReq": {
-      "type": "object"
+      "type": "object",
+      "title": "ListSecurityGroupsReq: req to list Seocurity Groups"
     },
     "sgroupsListSecurityGroupsResp": {
       "type": "object",
@@ -404,22 +419,28 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/sgroupsSecGroup"
-          }
+          },
+          "title": "security group items"
         }
       },
-      "title": "ListSecurityGroupsResp Security Groups lists"
+      "title": "ListSecurityGroupsResp: Security Groups list resp"
     },
     "sgroupsNetwork": {
       "type": "object",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "title": "the name of network"
         },
         "network": {
-          "$ref": "#/definitions/NetworksNetIP"
+          "$ref": "#/definitions/NetworksNetIP",
+          "title": "network in CIDR form"
         }
       },
-      "title": "ip network"
+      "title": "Network: represents a named IP network",
+      "required": [
+        "name"
+      ]
     },
     "sgroupsRule": {
       "type": "object",
@@ -451,7 +472,12 @@
           "title": "port range(s) to"
         }
       },
-      "title": "security group rule"
+      "title": "Rule: represents Security Wroups Rule",
+      "required": [
+        "sgFrom",
+        "sgTo",
+        "transport"
+      ]
     },
     "sgroupsRulesResp": {
       "type": "object",
@@ -460,24 +486,31 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/sgroupsRule"
-          }
+          },
+          "title": "SG rule(s) items"
         }
-      }
+      },
+      "title": "RulesResp: Security Group(s) Rule(s) resp"
     },
     "sgroupsSecGroup": {
       "type": "object",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "title": "name of security group"
         },
         "networks": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/sgroupsNetwork"
-          }
+          },
+          "title": "related to security gpoup network(s)"
         }
       },
-      "title": "security group"
+      "title": "SecGroup: represents a security group",
+      "required": [
+        "name"
+      ]
     },
     "sgroupsSyncNetworks": {
       "type": "object",
@@ -486,28 +519,33 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/sgroupsNetwork"
-          }
+          },
+          "title": "network items"
         }
       },
-      "title": "Synchronize networks"
+      "title": "SyncNetworks: subject of Networks to Sync"
     },
     "sgroupsSyncReq": {
       "type": "object",
       "properties": {
         "syncOp": {
-          "$ref": "#/definitions/SyncReqSyncOp"
+          "$ref": "#/definitions/SyncReqSyncOp",
+          "title": "sync operation to apply to"
         },
         "sgRules": {
-          "$ref": "#/definitions/sgroupsSyncSGRules"
+          "$ref": "#/definitions/sgroupsSyncSGRules",
+          "title": "subject of Security Grpup(s) Rule(s)"
         },
         "groups": {
-          "$ref": "#/definitions/sgroupsSyncSecurityGroups"
+          "$ref": "#/definitions/sgroupsSyncSecurityGroups",
+          "title": "subject of Security Grpup(s)"
         },
         "networks": {
-          "$ref": "#/definitions/sgroupsSyncNetworks"
+          "$ref": "#/definitions/sgroupsSyncNetworks",
+          "title": "subject of Network(s)"
         }
       },
-      "title": "Synchronize data"
+      "title": "SyncReq: request to apply changes in DB for one of subject [Networks|Sucurity Groups|Security Grpups Rules]"
     },
     "sgroupsSyncSGRules": {
       "type": "object",
@@ -516,10 +554,11 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/sgroupsRule"
-          }
+          },
+          "title": "security group rules items"
         }
       },
-      "title": "Synchronize security group Rules"
+      "title": "SyncSGRules: subject of Security Group Rules to Sync"
     },
     "sgroupsSyncSecurityGroups": {
       "type": "object",
@@ -528,10 +567,11 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/sgroupsSecGroup"
-          }
+          },
+          "title": "security group items"
         }
       },
-      "title": "Synchronize Security Groups"
+      "title": "SyncSecurityGroups: subject of Security Groups to Sync"
     },
     "sgroupsSyncStatusResp": {
       "type": "object",
@@ -539,9 +579,10 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time",
-          "title": "last succeeded update timestamp"
+          "title": "last succeeded updated DB timestamp"
         }
-      }
+      },
+      "title": "SyncStatusResp: db status after last succeeded Sync"
     }
   }
 }
