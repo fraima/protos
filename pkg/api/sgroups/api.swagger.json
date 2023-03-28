@@ -393,6 +393,15 @@
     },
     "sgroupsListNetworksReq": {
       "type": "object",
+      "properties": {
+        "neteworkNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "network names scope; if none then list all netrworks"
+        }
+      },
       "title": "ListNetworksReq: req to list Networks"
     },
     "sgroupsListNetworksResp": {
@@ -410,6 +419,15 @@
     },
     "sgroupsListSecurityGroupsReq": {
       "type": "object",
+      "properties": {
+        "sgNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "SG names scope; if none then list all SGs"
+        }
+      },
       "title": "ListSecurityGroupsReq: req to list Seocurity Groups"
     },
     "sgroupsListSecurityGroupsResp": {

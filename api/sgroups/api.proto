@@ -94,7 +94,10 @@ message SyncNetworks{
 }
 
 //ListNetworksReq: req to list Networks
-message ListNetworksReq {}
+message ListNetworksReq {
+  //network names scope; if none then list all netrworks
+  repeated string netework_names = 1;
+}
 
 //ListNetworksResp: Network list resp
 message ListNetworksResp {
@@ -103,7 +106,10 @@ message ListNetworksResp {
 }
 
 //ListSecurityGroupsReq: req to list Seocurity Groups
-message ListSecurityGroupsReq{}
+message ListSecurityGroupsReq {
+  //SG names scope; if none then list all SGs
+  repeated string sg_names = 1;
+}
 
 //ListSecurityGroupsResp: Security Groups list resp
 message ListSecurityGroupsResp{
