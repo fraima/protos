@@ -16,9 +16,9 @@ message Networks {
     }
     //PortRange: port [from - to] range 
     message PortRange {
-      //port from
+      //range left bound
       uint32 from = 1;
-      //port to
+      //range right bound 
       uint32 to = 2;
     }
     //CIDR: IP range

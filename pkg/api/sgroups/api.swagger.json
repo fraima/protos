@@ -285,22 +285,6 @@
     }
   },
   "definitions": {
-    "NetIPPortRange": {
-      "type": "object",
-      "properties": {
-        "from": {
-          "type": "integer",
-          "format": "int64",
-          "title": "port from"
-        },
-        "to": {
-          "type": "integer",
-          "format": "int64",
-          "title": "port to"
-        }
-      },
-      "title": "PortRange: port [from - to] range"
-    },
     "NetIPTransport": {
       "type": "string",
       "enum": [
@@ -319,6 +303,20 @@
         }
       },
       "title": "NetIP: represents IP-Network type (L3)"
+    },
+    "RulePorts": {
+      "type": "object",
+      "properties": {
+        "s": {
+          "type": "string",
+          "title": "source port \"num\" or port range \"num1-num2\""
+        },
+        "d": {
+          "type": "string",
+          "title": "destination  port \"num\" or port range \"num1-num2\""
+        }
+      },
+      "title": "Ports: represents Security Group Rule access source-dest ports"
     },
     "SyncReqSyncOp": {
       "type": "string",
@@ -376,7 +374,11 @@
           "title": "scope  GS name 'to' items"
         }
       },
-      "title": "FindRulesReq: req to find all SecGroup(s) Rule(s) scoped by variety('from') --\u003e variety('to') SG(s)"
+      "title": "FindRulesReq: req to find all SecGroup(s) Rule(s) scoped by variety('from') --\u003e variety('to') SG(s)",
+      "required": [
+        "sgFrom",
+        "sgTo"
+      ]
     },
     "sgroupsGetSgSubnetsResp": {
       "type": "object",
@@ -464,33 +466,26 @@
       "type": "object",
       "properties": {
         "sgFrom": {
-          "$ref": "#/definitions/sgroupsSecGroup",
+          "type": "string",
           "title": "security group at client"
         },
         "sgTo": {
-          "$ref": "#/definitions/sgroupsSecGroup",
+          "type": "string",
           "title": "security group at server"
         },
         "transport": {
           "$ref": "#/definitions/NetIPTransport",
-          "title": "IP net transport"
+          "title": "ip net transport"
         },
-        "portsFrom": {
+        "ports": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/NetIPPortRange"
+            "$ref": "#/definitions/RulePorts"
           },
-          "title": "port range(s) from"
-        },
-        "portsTo": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NetIPPortRange"
-          },
-          "title": "port range(s) to"
+          "title": "access ports set"
         }
       },
-      "title": "Rule: represents Security Wroups Rule",
+      "title": "Rule: represents Security Groups Rule",
       "required": [
         "sgFrom",
         "sgTo",
@@ -520,7 +515,7 @@
         "networks": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/sgroupsNetwork"
+            "type": "string"
           },
           "title": "related to security gpoup network(s)"
         }

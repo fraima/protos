@@ -47,26 +47,31 @@ message SecGroup {
   //name of security group
   string name = 1;
   //related to security gpoup network(s)
-  repeated Network networks = 2;
+  repeated string networks = 2;
 }
 
-//Rule: represents Security Wroups Rule
-message Rule {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {      
-      required: ["sg_from", "sg_to", "transport"]
-    }    
-  };
-  //security group at client
-  SecGroup sg_from = 1;
-  //security group at server
-  SecGroup sg_to = 2;
-  //IP net transport
-  common.Networks.NetIP.Transport transport = 3;
-  //port range(s) from
-  repeated common.Networks.NetIP.PortRange ports_from = 4;
-  //port range(s) to
-  repeated common.Networks.NetIP.PortRange ports_to = 5;
+//Rule: represents Security Groups Rule
+message Rule {   
+   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+      json_schema: {      
+        required: ["sg_from", "sg_to", "transport"]
+      }    
+   };
+   //Ports: represents Security Group Rule access source-dest ports
+   message Ports {
+      //source port "num" or port range "num1-num2"
+      string s = 1;
+      //destination  port "num" or port range "num1-num2"
+      string d = 2;
+   }
+   //security group at client
+   string sg_from = 1;
+   //security group at server
+   string sg_to = 2;
+   //ip net transport
+   common.Networks.NetIP.Transport transport = 3;   
+   //access ports set
+   repeated Ports ports = 4;
 }
 
 //SyncStatusResp: db status after last succeeded Sync
@@ -143,6 +148,11 @@ message SyncReq {
 
 //GetSgSubnetsReq: req to get Networks related to Security Group
 message GetSgSubnetsReq {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {      
+      required: ["sg_name"]
+    }    
+  };
   //security group name
   string sg_name = 1;
 }
@@ -155,6 +165,11 @@ message GetSgSubnetsResp {
 
 //GetRulesReq; req to get Rules scoped by SecGroup pair 'from' --> 'to'
 message GetRulesReq {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {      
+      required: ["sg_from", "sg_to"]
+    }    
+  };
   //name of security groups 'from'
   string sg_from = 1;
   //name of security groups 'to'
@@ -163,6 +178,11 @@ message GetRulesReq {
 
 //FindRulesReq: req to find all SecGroup(s) Rule(s) scoped by variety('from') --> variety('to') SG(s)
 message FindRulesReq {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {      
+      required: ["sg_from", "sg_to"]
+    }    
+  };
   //scope GS name 'from' items
   repeated string sg_from = 1;
   //scope  GS name 'to' items
@@ -177,6 +197,11 @@ message RulesResp {
 
 //GetSecGroupForAddressReq: req to get Security Group by IP or CIDR
 message GetSecGroupForAddressReq{
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {      
+      required: ["address"]
+    }    
+  };
   //an IP or CIDR
   string address = 1;
 }

@@ -162,9 +162,9 @@ type Networks_NetIP_PortRange struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//port from
+	//range left bound
 	From uint32 `protobuf:"varint,1,opt,name=from,proto3" json:"from,omitempty"`
-	//port to
+	//range right bound
 	To uint32 `protobuf:"varint,2,opt,name=to,proto3" json:"to,omitempty"`
 }
 
